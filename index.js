@@ -68,23 +68,25 @@ getIP((err, ip) => {
     if(!req.body.request) {
       missingRequiredProperty(req, res, 'request');
     }else {
-	  Request.findOne({content: req.body.request}, function (err, request) {
+      Request.findOne({content: req.body.request}, function (err, request) {
 	    if(err) {
-		  internalServerError(req, res);
-		  return;
+        internalServerError(req, res);
+        return;
 	    }
 	    if(!request) {
 	      request = new Request();
-		  request.content = req.body.request;
-		  request.count = 0;
+        request.content = req.body.request;
+        request.count = 0;
 	    }
 	    request.count++;
-	    request.save(function (err) {
+
+      request.save(function (err) {
 	      if(err){
-		    internalServerError(req, res);
+          internalServerError(req, res);
 	        return;
-		  }
-		  http.get({
+        }
+
+        http.get({
 	        host: greetingHost,
 	        port: greetingPort,
 	        path: greetingPath
@@ -92,28 +94,30 @@ getIP((err, ip) => {
 	        // Continuously update stream with data
 	        var body = '';
 	        response.on('data', function(d) {
-		      body += d;
+		        body += d;
 	        });
-	        response.on('end', function() {
-		      try{
-		        body = JSON.parse(body);
-		        res.json({
-			      apiVersion: apiVersion,
-			      count: request.count,
-			      currentVisit: currentVisit,
-			      response: util.format('Good %s, %s', body.state, req.body.request)
-		        });
-		      }catch (err) {
-		        internalServerError(req,res);
-		      }
+
+          response.on('end', function() {
+		        try{
+		          body = JSON.parse(body);
+		          res.json({
+			          apiVersion: apiVersion,
+			          count: request.count,
+			          currentVisit: currentVisit,
+			          response: util.format('Good %s, %s', body.state, req.body.request)
+		          });
+		        }catch (err) {
+		          internalServerError(req,res);
+		        }
 	        });
+
 	        response.on('error', function(err) {
-		      internalServerError(req,res);
+		        internalServerError(req,res);
 	        });
 	      });
-	    });
-	  });
-    }
+	     });
+	   });
+   }
   });
 
   function internalServerError(req, res) {
@@ -128,7 +132,7 @@ getIP((err, ip) => {
     res.status(status).json({
       detail: detail,
       status: status,
-	  title: title
+	    title: title
     });
   }
 
