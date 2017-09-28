@@ -14,7 +14,7 @@ const router = express.Router();
 
 const port = process.env.PORT || 8080;
 const greetingHost = process.env.GREETING_HOST || 'localhost';
-const greetingPort = process.env.GREETING_PORT || 8080;
+const greetingPort = process.env.GREETING_PORT || process.env.PORT || 8080;
 const greetingPath = process.env.GREETING_PATH || '/api/greeting';
 const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/';
 
@@ -37,12 +37,15 @@ getIP((err, ip) => {
   app.use(bodyParser.json());
 
   mongoose.connect(mongoURI);
-  router.get('/greeting', function(req, res) {
-    res.json({
-      datetime: util.format('%s', moment().toISOString()),
-      state: 'Afternoon'
+
+  if(greetingHost === 'localhost') {
+    router.get('/greeting', function(req, res) {
+      res.json({
+        datetime: util.format('%s', moment().toISOString()),
+        state: 'Afternoon'
+      });
     });
-  });
+  }
 
   router.get('/spesifikasi.yaml', function(req, res) {
     res.sendFile(path.join(__dirname, 'spesifikasi', 'spesifikasi.yaml'));
