@@ -27,21 +27,21 @@ const getIP = require('external-ip')();
 
 getIP((err, ip) => {
   if (err) {
-    // every service in the list has failed 
+    // every service in the list has failed
     throw err;
   }
   spesifications.host = util.format('%s:%s', ip, port);
   fs.writeFileSync(path.join(__dirname, 'spesifikasi', 'spesifikasi.yaml'), yaml.dump(spesifications), 'utf8')
 
   app.use(bodyParser.urlencoded({ extended: true }));
-  app.use(bodyParser.json());              
+  app.use(bodyParser.json());
 
   mongoose.connect(mongoURI);
   router.get('/greeting', function(req, res) {
     res.json({
-	  datetime: util.format('%s', moment().toISOString()),
+      datetime: util.format('%s', moment().toISOString()),
       state: 'Afternoon'
-    });   
+    });
   });
 
   router.get('/spesifikasi.yaml', function(req, res) {
@@ -52,12 +52,12 @@ getIP((err, ip) => {
     const number = _.parseInt(req.params.number);
     if(!_.isInteger(number)) {
       sendError(req, res, 'parameter must be a valid integer', 400, 'Bad Request');
-	  return;
+      return;
     }
     res.json({
-	  apiversion: apiVersion,
+      apiversion: apiVersion,
       plusoneret: number + 1
-    });   
+    });
   });
 
   router.post('/hello', function(req, res) {
@@ -79,7 +79,7 @@ getIP((err, ip) => {
 	    request.save(function (err) {
 	      if(err){
 		    internalServerError(req, res);
-	        return;	
+	        return;
 		  }
 		  http.get({
 	        host: greetingHost,
@@ -126,7 +126,7 @@ getIP((err, ip) => {
       detail: detail,
       status: status,
 	  title: title
-    }); 
+    });
   }
 
   app.use('/api', router);
