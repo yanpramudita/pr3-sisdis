@@ -27,9 +27,6 @@ const apiVersion = _.parseInt(spesifications.info.version);
 spesifications.host = util.format('%s:%s', ip.address(), port);
 fs.writeFileSync(path.join(__dirname, 'spesifikasi', 'spesifikasi.yaml'), yaml.dump(spesifications), 'utf8')
 
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
 app.use(bodyParser.json());
 
 mongoose.connect(mongoURI);
